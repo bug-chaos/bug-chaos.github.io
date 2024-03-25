@@ -3,7 +3,60 @@
     <id>http://example.com</id>
     <title>BLoG</title>
     <link href="http://example.com" />
-    <updated>2024-03-25T06:07:57.000Z</updated>
+    <updated>2024-03-25T07:16:33.000Z</updated>
+    <entry>
+        <id>http://example.com/2024/03/25/hog%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/</id>
+        <title>hog算法学习</title>
+        <link rel="alternate" href="http://example.com/2024/03/25/hog%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/"/>
+        <content type="html">&lt;h1 id=&#34;hog算法的学习与理解&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#hog算法的学习与理解&#34;&gt;#&lt;/a&gt; hog 算法的学习与理解&lt;/h1&gt;
+&lt;h2 id=&#34;总览&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#总览&#34;&gt;#&lt;/a&gt; 总览&lt;/h2&gt;
+&lt;p&gt;HOG 特征检测算法的几个步骤：颜色空间归一化 —&amp;gt; 梯度计算 —&amp;gt; 梯度方向直方图 —&amp;gt;&lt;br&gt;
+ 重叠块直方图归一化 —&amp;gt;HOG 特征。&lt;/p&gt;
+&lt;p&gt;特征描述符是通过提取图像的有用信息，并且丢弃无关信息来简化图像的表示。&lt;/p&gt;
+&lt;p&gt;HOG 特征描述符可以将 3 通道的彩色图像转换成一定长度的特征向量。&lt;br&gt;
+那什么样的 “特征” 对分类任务是有用，比如我们想检测出马路上的车道线，那么我们可以通过边缘检测&lt;br&gt;
+来找到这些车道线，在这种情况下，边缘信息就是 “有用的”，而颜色信息是无关的。&lt;/p&gt;
+&lt;p&gt;在 HOG 特征描述符中，梯度方向的分布，也就是梯度方向的直方图被视作特征。图像的梯度 (x 和 y 导数) 非常有用，因为边缘和拐角 (强度突变的区域) 周围的梯度幅度很大，并且边缘和拐角比平坦区域包含更多关于物体形状的信息&lt;/p&gt;
+&lt;h2 id=&#34;1-颜色空间归一化&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#1-颜色空间归一化&#34;&gt;#&lt;/a&gt; 1、颜色空间归一化&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;图像灰度化&lt;br&gt;
+对于彩色图像，将 RGB 分量转化为灰度图像，其转化公式为：&lt;br&gt;
+gray = 0.3*R+0.59*G+0.11*B&lt;/li&gt;
+&lt;li&gt;Gamma 校正&lt;br&gt;
+在图像照度不均匀的情况下，可以通过 Gamma 校正，将图像整体亮度提高或降低。在实际中可以采&lt;br&gt;
+用两种不同的方式进行 Gamma 标准化，平方根、对数法。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;调节图像对比度，减少光照对图像的影响（包括光照不均和局部阴影），使过曝或者欠曝的图像恢复正常，更接近人眼看到的图像。&lt;/p&gt;
+&lt;h2 id=&#34;2-梯度计算&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#2-梯度计算&#34;&gt;#&lt;/a&gt; 2、 梯度计算&lt;/h2&gt;
+&lt;p&gt;在一幅模糊图像中的物体的轮廓不明显，轮廓边缘灰度变化不强烈，从而导致层次感不强，而在清晰图片中的物体轮廓边缘灰度变化明显，层次感强。那么这种灰度变化明显不明显怎么去定义呢？&lt;/p&gt;
+&lt;p&gt;可以使用&lt;strong&gt;导数（梯度）&lt;/strong&gt;，衡量图像灰度的变化率，因为图像就是函数。正因如此，我们引入的图像梯度可以把图像看成二维离散函数，图像梯度其实就是这个二维离散函数的求导。&lt;/p&gt;
+&lt;p&gt;梯度的方向是函数变化最快的方向，所以当函数中存在边缘时，一定有较大的梯度值，&lt;br&gt;
+相反，当图像中有比较平滑的部分时，灰度值变化较小，则相应的梯度也较小&lt;/p&gt;
+&lt;p&gt;一些经典的图像梯度算法是考虑图像的每个像素的某个邻域内的灰度变化，利用边缘临近&lt;br&gt;
+的一阶或二阶导数变化规律，对原始图像中像素某个邻域设置梯度算子，&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BvZW1fcWlhbm1vL2FydGljbGUvZGV0YWlscy8yNTU2MDkwMQ==&#34;&gt;Sobel 算子&lt;/span&gt;用来&lt;br&gt;
+计算图像灰度函数的近似梯度。Sobel 算子根据像素点上下、左右邻点灰度加权差，在边缘处达到极值这一现象检测边缘。&lt;/p&gt;
+&lt;p&gt;为了得到梯度直方图，那么首先需要计算水平和垂直梯度，这可以通过使用以下内核过滤图像来实现，分别用于计算水平梯度和垂直梯度。&lt;br&gt;
+我们可以使用内核大小为 1 的 Sobel 算子，来获得相同的结果。然后再计算 x 和 y 方向梯度的合梯度，包括幅值和方向：&lt;br&gt;
+注意：梯度方向会取绝对值，因此得到的角度范围是 [0,180°]&lt;/p&gt;
+&lt;h2 id=&#34;3-计算梯度直方图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#3-计算梯度直方图&#34;&gt;#&lt;/a&gt; 3、计算梯度直方图&lt;/h2&gt;
+&lt;p&gt;在这一步，我们先把整个图像划分为若干个 8x8 的小单元，称为 cell，并计算每个 cell 的&lt;br&gt;
+梯度直方图。这个 cell 的尺寸也可以是其他值，根据具体的特征而定。&lt;/p&gt;
+&lt;p&gt;为什么我们要把图像分成若干个 8x8 的小单元？&lt;/p&gt;
+&lt;p&gt;这是因为对于一整张梯度图，其中的有效特征是非常稀疏的，不但运算量大，而且效果可&lt;br&gt;
+能还不好。于是我们就使用特征描述符来表示一个更紧凑的特征。一个 8x8 的小单元就包&lt;br&gt;
+含了 8x8x2 = 128 个值，因为每个像素包括梯度的大小和方向。&lt;/p&gt;
+&lt;p&gt;现在我们要把这个 8x8 的小单元用长度为 9 的数组来表示，这个数组就是梯度直方图。这种  表示方法不仅使得特征更加紧凑，而且对单个像素值的变化不敏感，也就是能够抗噪声干扰。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;参考文章&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#参考文章&#34;&gt;#&lt;/a&gt; 参考文章&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC84NTgyOTE0NQ==&#34;&gt;hog 算法&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8xMTMzOTc5ODg=&#34;&gt;图像梯度&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xpdWxpbmE2MDMvYXJ0aWNsZS9kZXRhaWxzLzgyOTEwOTM=&#34;&gt;hog 特征&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL1RvdWdoU3RvbmVYL2hvZ19wZWRlc3RyYW5fZGV0ZWN0X3B5dGhvbg==&#34;&gt;hog+svm&lt;/span&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+        <updated>2024-03-25T07:16:33.000Z</updated>
+    </entry>
     <entry>
         <id>http://example.com/2024/03/25/%E4%BB%96%E5%BE%8B/</id>
         <title>他律</title>
