@@ -100,12 +100,12 @@ Yume Shoka = BLoG</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeyonbf9j20zk0m8e81.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicm07ih54j20zk0m84qp.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipey0a334j20zk0m8qpt.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclxp31goj20zk0m8qv5.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giph47e9vtj20zk0m8x6l.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeu7txpzj20zk0m81kx.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclg5ms2rj20zk0m8u0x.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gicm07ih54j20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipet4bz0yj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giciundwu5j20zk0m8n9e.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipexw3o58j20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipevgoki5j20zk0m84qp.jpg"></li>
         </ul>
       </div>
     </header>
@@ -164,12 +164,13 @@ Yume Shoka = BLoG</title>
 对于彩色图像，将 RGB 分量转化为灰度图像，其转化公式为：<br>
 gray = 0.3*R+0.59*G+0.11*B</li>
 <li>Gamma 校正<br>
-在图像照度不均匀的情况下，可以通过 Gamma 校正，将图像整体亮度提高或降低。在实际中可以采<br>
-用两种不同的方式进行 Gamma 标准化，平方根、对数法。</li>
+在图像照度不均匀的情况下，可以通过 Gamma 校正，将图像整体亮度提高或降低。在实际中可以采用两种不同的方式进行 Gamma 标准化，平方根、对数法。</li>
 </ol>
 <p>调节图像对比度，减少光照对图像的影响（包括光照不均和局部阴影），使过曝或者欠曝的图像恢复正常，更接近人眼看到的图像。</p>
 <h2 id="2-梯度计算"><a class="markdownIt-Anchor" href="#2-梯度计算">#</a> 2、 梯度计算</h2>
-<p>在一幅模糊图像中的物体的轮廓不明显，轮廓边缘灰度变化不强烈，从而导致层次感不强，而在清晰图片中的物体轮廓边缘灰度变化明显，层次感强。那么这种灰度变化明显不明显怎么去定义呢？</p>
+<blockquote>
+<p>在一幅模糊图像中的物体的轮廓不明显，轮廓边缘灰度变化不强烈，从而导致层次感不强，&gt; 而在清晰图片中的物体轮廓边缘灰度变化明显，层次感强。那么这种灰度变化明显不明显怎 &gt; 么去定义呢？</p>
+</blockquote>
 <p>可以使用<strong>导数（梯度）</strong>，衡量图像灰度的变化率，因为图像就是函数。正因如此，我们引入的图像梯度可以把图像看成二维离散函数，图像梯度其实就是这个二维离散函数的求导。</p>
 <p>梯度的方向是函数变化最快的方向，所以当函数中存在边缘时，一定有较大的梯度值，<br>
 相反，当图像中有比较平滑的部分时，灰度值变化较小，则相应的梯度也较小</p>
@@ -177,7 +178,7 @@ gray = 0.3*R+0.59*G+0.11*B</li>
 的一阶或二阶导数变化规律，对原始图像中像素某个邻域设置梯度算子，<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BvZW1fcWlhbm1vL2FydGljbGUvZGV0YWlscy8yNTU2MDkwMQ==">Sobel 算子</span>用来<br>
 计算图像灰度函数的近似梯度。Sobel 算子根据像素点上下、左右邻点灰度加权差，在边缘处达到极值这一现象检测边缘。</p>
 <p>为了得到梯度直方图，那么首先需要计算水平和垂直梯度，这可以通过使用以下内核过滤图像来实现，分别用于计算水平梯度和垂直梯度。<br>
-我们可以使用内核大小为 1 的 Sobel 算子，来获得相同的结果。然后再计算 x 和 y 方向梯度的合梯度，包括幅值和方向：<br>
+我们可以使用内核大小为 1 的 Sobel 算子，来获得相同的结果。然后再计算 x 和 y 方向梯度的合梯度，包括幅值和方向：  （待补充图片）<br>
 注意：梯度方向会取绝对值，因此得到的角度范围是 [0,180°]</p>
 <h2 id="3-计算梯度直方图"><a class="markdownIt-Anchor" href="#3-计算梯度直方图">#</a> 3、计算梯度直方图</h2>
 <p>在这一步，我们先把整个图像划分为若干个 8x8 的小单元，称为 cell，并计算每个 cell 的<br>
@@ -186,7 +187,21 @@ gray = 0.3*R+0.59*G+0.11*B</li>
 <p>这是因为对于一整张梯度图，其中的有效特征是非常稀疏的，不但运算量大，而且效果可<br>
 能还不好。于是我们就使用特征描述符来表示一个更紧凑的特征。一个 8x8 的小单元就包<br>
 含了 8x8x2 = 128 个值，因为每个像素包括梯度的大小和方向。</p>
-<p>现在我们要把这个 8x8 的小单元用长度为 9 的数组来表示，这个数组就是梯度直方图。这种  表示方法不仅使得特征更加紧凑，而且对单个像素值的变化不敏感，也就是能够抗噪声干扰。</p>
+<p>现在我们要把这个 8x8 的小单元用长度为 9 的数组来表示，这个数组就是梯度直方图。这种  表示方法不仅使得特征更加紧凑，而且对单个像素值的变化不敏感，也就是能够抗噪声<br>
+干扰。skimage 中就是直接按照角度，把直方图分为 0-20，20-40… 这种的划分方式，<br>
+如果角度为 10 度的时候，就直接把对应的幅值 4 全部添加到（0-20）这一维度上。</p>
+<h2 id="4-block-归一化"><a class="markdownIt-Anchor" href="#4-block-归一化">#</a> 4、Block 归一化</h2>
+<p>HOG 将 8×8 的一个区域作为一个 cell，再以 2×2 个 cell 作为一组，称为 block。由于每个  cell 有 9 个值，2×2 个 cell 则有 36 个值，HOG 是通过滑动窗口的方式来得到 block 的<br>
+（就是类似 cnn 中的卷积操作）</p>
+<p>在前面的步骤中，我们基于图像的梯度对每个 cell 创建了一个直方图。<br>
+但是图像的梯度对整体光照非常敏感，比如通过将所有像素值除以 2 来使图像变暗，那么<br>
+梯度幅值将减小一半，因此直方图中的值也将减小一半。 理想情况下，我们希望我们的<br>
+特征描述符不会受到光照变化的影响，那么我们就需要将直方图 “归一化” 。归一化就是<br>
+常见的归一化方式，一个 block 有 4 个直方图，将这 4 个直方图拼接成长度为 36 的向量，然<br>
+后对这个向量进行归一化。因为使用的是滑动窗口，滑动步长为 8 个像素，所以每滑动<br>
+一次，就在这个窗口上进行归一化计算得到长度为 36 的向量，并重复这个过程。</p>
+<h2 id="5-计算hog特征向量"><a class="markdownIt-Anchor" href="#5-计算hog特征向量">#</a> 5、计算 HOG 特征向量</h2>
+<p>将所有 block 合并，就得到整个图像的特征描述符</p>
 <hr>
 <h2 id="参考文章"><a class="markdownIt-Anchor" href="#参考文章">#</a> 参考文章</h2>
 <ol>
@@ -206,7 +221,7 @@ gray = 0.3*R+0.59*G+0.11*B</li>
       <i class="ic i-calendar-check"></i>
     </span>
     <span class="text">Edited on</span>
-    <time title="Modified: 2024-03-25 21:52:21" itemprop="dateModified" datetime="2024-03-25T21:52:21+08:00">2024-03-25</time>
+    <time title="Modified: 2024-03-31 21:30:47" itemprop="dateModified" datetime="2024-03-31T21:30:47+08:00">2024-03-31</time>
   </span>
 </div>
 
@@ -261,7 +276,7 @@ gray = 0.3*R+0.59*G+0.11*B</li>
     <div class="item left">
       
 
-  <a href="/2024/03/25/%E4%BB%96%E5%BE%8B/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeyhsblkj20zk0m81kx.jpg" title="他律">
+  <a href="/2024/03/25/%E4%BB%96%E5%BE%8B/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclimtf7dj20zk0m8qav.jpg" title="他律">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> </span>
   <h3>他律</h3>
@@ -285,7 +300,7 @@ gray = 0.3*R+0.59*G+0.11*B</li>
   <div class="panels">
     <div class="inner">
       <div class="contents panel pjax" data-title="Contents">
-          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#hog%E7%AE%97%E6%B3%95%E7%9A%84%E5%AD%A6%E4%B9%A0%E4%B8%8E%E7%90%86%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text"> hog 算法的学习与理解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E8%A7%88"><span class="toc-number">1.1.</span> <span class="toc-text"> 总览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%A2%9C%E8%89%B2%E7%A9%BA%E9%97%B4%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">1.2.</span> <span class="toc-text"> 1、颜色空间归一化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%A2%AF%E5%BA%A6%E8%AE%A1%E7%AE%97"><span class="toc-number">1.3.</span> <span class="toc-text"> 2、 梯度计算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%AE%A1%E7%AE%97%E6%A2%AF%E5%BA%A6%E7%9B%B4%E6%96%B9%E5%9B%BE"><span class="toc-number">1.4.</span> <span class="toc-text"> 3、计算梯度直方图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-number">1.5.</span> <span class="toc-text"> 参考文章</span></a></li></ol></li></ol>
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#hog%E7%AE%97%E6%B3%95%E7%9A%84%E5%AD%A6%E4%B9%A0%E4%B8%8E%E7%90%86%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text"> hog 算法的学习与理解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E8%A7%88"><span class="toc-number">1.1.</span> <span class="toc-text"> 总览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%A2%9C%E8%89%B2%E7%A9%BA%E9%97%B4%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">1.2.</span> <span class="toc-text"> 1、颜色空间归一化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%A2%AF%E5%BA%A6%E8%AE%A1%E7%AE%97"><span class="toc-number">1.3.</span> <span class="toc-text"> 2、 梯度计算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%AE%A1%E7%AE%97%E6%A2%AF%E5%BA%A6%E7%9B%B4%E6%96%B9%E5%9B%BE"><span class="toc-number">1.4.</span> <span class="toc-text"> 3、计算梯度直方图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-block-%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">1.5.</span> <span class="toc-text"> 4、Block 归一化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E8%AE%A1%E7%AE%97hog%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F"><span class="toc-number">1.6.</span> <span class="toc-text"> 5、计算 HOG 特征向量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-number">1.7.</span> <span class="toc-text"> 参考文章</span></a></li></ol></li></ol>
       </div>
       <div class="related panel pjax" data-title="Related">
       </div>
@@ -352,7 +367,7 @@ gray = 0.3*R+0.59*G+0.11*B</li>
 <div class="breadcrumb">
 </div>
 
-    <span><a href="/2024/03/25/%E4%BB%96%E5%BE%8B/" title="他律">他律</a></span>
+    <span><a href="/2024/03/18/My-New-Post/" title="My New Post">My New Post</a></span>
   </li>
 
       
@@ -361,7 +376,7 @@ gray = 0.3*R+0.59*G+0.11*B</li>
 <div class="breadcrumb">
 </div>
 
-    <span><a href="/2024/03/18/hello-world/" title="Hello World">Hello World</a></span>
+    <span><a href="/2024/03/20/%E6%97%A5%E5%B8%B8%E8%A7%84%E5%88%92%EF%BC%88%E7%AC%AC%E4%B8%80%E7%89%88%EF%BC%89/" title="日常规划（第一版）">日常规划（第一版）</a></span>
   </li>
 
       
@@ -379,7 +394,7 @@ gray = 0.3*R+0.59*G+0.11*B</li>
 <div class="breadcrumb">
 </div>
 
-    <span><a href="/2024/03/18/My-New-Post/" title="My New Post">My New Post</a></span>
+    <span><a href="/2024/03/18/hello-world/" title="Hello World">Hello World</a></span>
   </li>
 
       
@@ -406,7 +421,7 @@ gray = 0.3*R+0.59*G+0.11*B</li>
 <div class="breadcrumb">
 </div>
 
-    <span><a href="/2024/03/20/%E6%97%A5%E5%B8%B8%E8%A7%84%E5%88%92%EF%BC%88%E7%AC%AC%E4%B8%80%E7%89%88%EF%BC%89/" title="日常规划（第一版）">日常规划（第一版）</a></span>
+    <span><a href="/2024/03/25/%E4%BB%96%E5%BE%8B/" title="他律">他律</a></span>
   </li>
 
   </ul>
